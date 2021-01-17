@@ -22,3 +22,7 @@
 
 3- Make django wait for postgres to start
 
+4- Update the script so it load data from the csv in batches
+
+
+

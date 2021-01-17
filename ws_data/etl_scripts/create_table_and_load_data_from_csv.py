@@ -1,4 +1,5 @@
 import psycopg2 as pg
+from psycopg2 import extras
 import sys
 import csv
 
@@ -54,36 +55,45 @@ def convert_empty_to_null(csv_row_dict):
 
 # inserts data from a DictReader populated with data from GlobalLandTemperaturesByCity.csv
 # into land_temperature table.
-# parameters are a cursor for accessing the database, the DictReader row and the csv line number
-def insert_into_land_temperature(db_connection_cursor, csv_row_dict, line_number):
+# parameters are a cursor for accessing the database, the DictReader row
+def insert_many_rows_into_land_temperature(db_connection_cursor, values):
     try:
-        values = (csv_row_dict['dt'], csv_row_dict['City'],
-                  csv_row_dict['Country'], csv_row_dict['AverageTemperature'],
-                  csv_row_dict['AverageTemperatureUncertainty'],
-                  csv_row_dict['Latitude'], csv_row_dict['Longitude'])
-
-        db_connection_cursor.execute("""
-                        INSERT INTO land_temperature
-                        VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s);
-                    """, values)
+        extras.execute_values(db_connection_cursor, """
+                        INSERT INTO land_temperature (date, city_name, country_name, avg_temp, 
+                                                      temp_uncertainty, latitude, longitude)
+                        VALUES %s;
+                    """, values, page_size=len(values))
 
     except Exception as error:
-        print(f'Row {line_number} was not loaded. Check errors bellow')
         print(error)
 
 
 # reads from GlobalLandTemperaturesByCity.csv and loads data into table land_temperature. Field
 # names are: dt,AverageTemperature,AverageTemperatureUncertainty,City,Country,Latitude,Longitude
-def load_data_from_csv(csv_path):
+def load_data_from_csv(csv_path, batch_size=100000):
     try:
         postgres_connection = get_postgres_connection()
         cursor = postgres_connection.cursor()
+        values = []
 
         with open(csv_path, newline='') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
+                if len(values) == batch_size:
+                    insert_many_rows_into_land_temperature(cursor, values)
+                    postgres_connection.commit()
+                    values = []
+                    print(f'Processing line: {reader.line_num}')
+
                 convert_empty_to_null(row)
-                insert_into_land_temperature(cursor, row, reader.line_num)
+                values.append((row['dt'], row['City'],
+                               row['Country'], row['AverageTemperature'],
+                               row['AverageTemperatureUncertainty'],
+                               row['Latitude'], row['Longitude'],))
+            
+            # in case the number of rows is not a multiple of batch_size, we must process the last rows
+            if len(values) > 0:
+                insert_many_rows_into_land_temperature(cursor, values)
                 postgres_connection.commit()
 
         cursor.close()
