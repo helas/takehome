@@ -24,5 +24,24 @@
 
 4- Update the script so it load data from the csv in batches
 
+5- Add Django rest framework to requirements
+    - added rest framework app to INSTALLED_APPS
+    - added REST_FRAMEWORK entry in settings.py
+
+6- Create land temperature application on django
+    - create the app using start app
+    - added land temperatures app to INSTALLED_APPS
+    - create model to land temperatures table using inspectdb:
+        - get models.py from python manage.py inspectdb
+        - generate migrations with python manage.py makemigrations land_temperatures
+        - then initialize migration db python manage.py migrate land_temperatures --fake
+        - migrate with python manage.py migrate
+        - set managed as true
+        - updated docker-compose
+
+    - generate simple view with DRF and write basic tests for it
+
+
+
 
 
