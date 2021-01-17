@@ -45,6 +45,12 @@
     - generate tests
     - update views
 
+8- implement view that allow updating a record from the table based on the city_name and date
+    ? the statement suggests that there are only one pair (date, city) but this is not specified in the kaggle project
+        ? as it is bad to have date as primary_key, I will add a unique constraint to the pair of fields date and city
+    - update "etl" scripts
+    - generate tests
+    - update views and urls
 
 
 
