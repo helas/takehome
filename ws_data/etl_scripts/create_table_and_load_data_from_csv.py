@@ -30,7 +30,8 @@ def create_land_temperatures_db():
                     "avg_temp" double precision, 
                     "temp_uncertainty" double precision, 
                     "latitude" text NOT NULL, 
-                    "longitude" text NOT NULL                
+                    "longitude" text NOT NULL,
+                    UNIQUE (city_name, date)
                 );    
             """
                        )
