@@ -41,7 +41,11 @@
 
     - generate simple view with DRF and write basic tests for it
 
-7-
+7- implement view for creating a new land temperature record
+    - generate tests
+    - update views
+
+
 
 
 
