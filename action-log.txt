@@ -41,7 +41,7 @@
 
     - generate simple view with DRF and write basic tests for it
 
-
+7-
 
 
 
