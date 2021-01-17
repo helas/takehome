@@ -5,7 +5,7 @@ services:
     image: postgres:13.1
     restart: always
     environment:
-      - POSTGRES_DB=study_db
+      - POSTGRES_DB=takehome_ws_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
