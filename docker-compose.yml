@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:13.1
+    restart: always
+    environment:
+      - POSTGRES_DB=study_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  web-service:
+    depends_on:
+      - database
+    build: .
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ws_data:/ws_data

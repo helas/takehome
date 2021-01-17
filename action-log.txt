@@ -1,0 +1,4 @@
+0- getting basic django+postgres env working with docker
+    - created dir ws_data
+    - run docker-compose run web-service django-admin startproject takehome_ws .
+    - run docker-compose up
