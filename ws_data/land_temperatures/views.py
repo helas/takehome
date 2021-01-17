@@ -1,6 +1,8 @@
+from django.db.models import Max, Min, Q
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import datetime
 
 from .models import LandTemperature
 from .serializers import LandTemperatureSerializer
@@ -9,18 +11,50 @@ from .serializers import LandTemperatureUpdateTemperatureUncertainty
 from .serializers import LandTemperatureUpdateAverageUncertainty
 
 
+def __get_aggregation_function_for_land_temperature_list_by_range(aggregation):
+    if aggregation == 'max':
+        return Max
+    elif aggregation == 'min':
+        return Min
 
-@api_view(['GET', 'POST', 'PUT'])
+    return None
+
+
+@api_view(['GET', 'POST'])
 def land_temperature_list(request):
-    """
-    List 10 first code land temperatures, or create a new land temperature.
-    """
     if request.method == 'GET':
-        temperatures = LandTemperature.objects.all()[:10]
-        serializer = LandTemperatureSerializer(temperatures, many=True)
-        return Response(serializer.data)
+        try:
+            n_results = int(request.query_params.get('n_results'))
+            start_date = datetime.strptime(request.query_params.get('start_date'), '%Y-%m-%d')
+            end_date = datetime.strptime(request.query_params.get('end_date'), '%Y-%m-%d')
+            aggregation = request.query_params.get('aggregation')
 
-    elif request.method == 'POST':
+            aggregate_function = __get_aggregation_function_for_land_temperature_list_by_range(aggregation)
+            if aggregate_function is None:
+                return Response('Aggregate function can only be max or min', status=status.HTTP_400_BAD_REQUEST)
+
+            agg_temperatures = LandTemperature.objects.filter(date__range=(start_date, end_date))\
+                                                      .values('city_name')\
+                                                      .order_by('city_name')\
+                                                      .annotate(aggregate_function('avg_temp'))
+
+            result = []
+            for record in agg_temperatures:
+                city_name, agg_temp = list(record.values())
+                result += LandTemperature.objects.filter(avg_temp=agg_temp, city_name=city_name)[:n_results]
+
+
+            serializer = LandTemperatureSerializer(result, many=True)
+            return Response(serializer.data)
+
+        except KeyError as _:
+            Response(f'Query parameters are missing', status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as error:
+            print(error)
+            return Response('Error while performing get on land_temperature-list', status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'POST':
         serializer = LandTemperatureSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

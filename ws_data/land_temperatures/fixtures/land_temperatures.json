@@ -37,5 +37,70 @@
     "latitude": "57.05N",
     "longitude": "10.33E"
   }
+},
+  {
+  "model": "land_temperatures.landtemperature",
+  "pk": 741,
+  "fields": {
+    "date": "1805-04-01",
+    "city_name": "Vice City",
+    "country_name": "Denmark",
+    "avg_temp": 4.67,
+    "temp_uncertainty": 4.063,
+    "latitude": "57.05N",
+    "longitude": "10.33E"
+  }
+},
+{
+  "model": "land_temperatures.landtemperature",
+  "pk": 742,
+  "fields": {
+    "date": "1805-05-01",
+    "city_name": "Vice City",
+    "country_name": "Denmark",
+    "avg_temp": 8.747,
+    "temp_uncertainty": 1.733,
+    "latitude": "57.05N",
+    "longitude": "10.33E"
+  }
+},
+{
+  "model": "land_temperatures.landtemperature",
+  "pk": 743,
+  "fields": {
+    "date": "1805-06-01",
+    "city_name": "Wasteland",
+    "country_name": "Denmark",
+    "avg_temp": 12.2,
+    "temp_uncertainty": 3.07,
+    "latitude": "57.05N",
+    "longitude": "10.33E"
+  }
+},
+  {
+  "model": "land_temperatures.landtemperature",
+  "pk": 744,
+  "fields": {
+    "date": "1805-07-01",
+    "city_name": "Wasteland",
+    "country_name": "Denmark",
+    "avg_temp": 12.2,
+    "temp_uncertainty": 3.07,
+    "latitude": "57.05N",
+    "longitude": "10.33E"
+  }
+},
+{
+  "model": "land_temperatures.landtemperature",
+  "pk": 745,
+  "fields": {
+    "date": "1805-07-01",
+    "city_name": "Århus",
+    "country_name": "Denmark",
+    "avg_temp": 12,
+    "temp_uncertainty": 3.07,
+    "latitude": "57.05N",
+    "longitude": "10.33E"
+  }
 }
 ]

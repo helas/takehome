@@ -19,6 +19,6 @@ class LandTemperature(models.Model):
 
     class Meta:
         managed = True
+        unique_together = (('city_name', 'date'),)
         db_table = 'land_temperature'
-        ordering = ['date']
 
