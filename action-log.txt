@@ -2,3 +2,16 @@
     - created dir ws_data
     - run docker-compose run web-service django-admin startproject takehome_ws .
     - run docker-compose up
+
+1- associate postgres to django
+    - modify settings.py
+    - run docker-compose up
+
+2- creating simple script to load data from csv to postgres
+    ? the statement is direct about creating a table schema for the csv data, even if there's a lot of duplication
+    ? the data from csv must be loaded *into* the table
+    ? lots of empty values for the averages, but not sure if this is an important information for analysts
+    ? the statement is direct about creating the table *before* using django.
+    - create straightforward python script for creating db schema
+        ? as I know this will be loaded into django, I'm using field types and Django friendly names
+
