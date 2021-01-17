@@ -14,4 +14,11 @@
     ? the statement is direct about creating the table *before* using django.
     - create straightforward python script for creating db schema
         ? as I know this will be loaded into django, I'm using field types and Django friendly names
+    - create straightforward python script for loading data from the csv to the db
+        ? I don't have any information about the expected format of the fields and importance of empty fields
+        - empty values are being kept as nulls because I don't know if I could drop those entries
+        - the script is slow because it commits a transaction at every insert and because it is serial
+            - it can be improved later using execute_values for example
+
+3- Make django wait for postgres to start
 

@@ -1,0 +1,110 @@
+import psycopg2 as pg
+import sys
+import csv
+
+
+def get_postgres_connection():
+    try:
+        return pg.connect(
+            database='takehome_ws_db',
+            user='postgres',
+            password='postgres',
+            host='database'
+        )
+    except Exception as error:
+        print('Error while connecting')
+        print(error)
+
+
+def create_land_temperatures_db():
+    try:
+        postgres_connection = get_postgres_connection()
+        cursor = postgres_connection.cursor()
+        cursor.execute("""                        
+                CREATE TABLE IF NOT EXISTS land_temperature (
+                    "id" serial NOT NULL PRIMARY KEY,
+                    "date" date NOT NULL,
+                    "city_name" text NOT NULL,
+                    "country_name" text NOT NULL,
+                    "avg_temp" double precision, 
+                    "temp_uncertainty" double precision, 
+                    "latitude" text NOT NULL, 
+                    "longitude" text NOT NULL                
+                );    
+            """
+                       )
+        postgres_connection.commit()
+        cursor.close()
+        postgres_connection.close()
+        print("Schema was created or it already exists")
+        return True
+
+    except Exception as error:
+        print('Error while creating db')
+        print(error)
+        return False
+
+
+# replace empty values by nulls
+def convert_empty_to_null(csv_row_dict):
+    for k, v in csv_row_dict.items():
+        if v == '':
+            csv_row_dict[k] = None
+
+
+# inserts data from a DictReader populated with data from GlobalLandTemperaturesByCity.csv
+# into land_temperature table.
+# parameters are a cursor for accessing the database, the DictReader row and the csv line number
+def insert_into_land_temperature(db_connection_cursor, csv_row_dict, line_number):
+    try:
+        values = (csv_row_dict['dt'], csv_row_dict['City'],
+                  csv_row_dict['Country'], csv_row_dict['AverageTemperature'],
+                  csv_row_dict['AverageTemperatureUncertainty'],
+                  csv_row_dict['Latitude'], csv_row_dict['Longitude'])
+
+        db_connection_cursor.execute("""
+                        INSERT INTO land_temperature
+                        VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s);
+                    """, values)
+
+    except Exception as error:
+        print(f'Row {line_number} was not loaded. Check errors bellow')
+        print(error)
+
+
+# reads from GlobalLandTemperaturesByCity.csv and loads data into table land_temperature. Field
+# names are: dt,AverageTemperature,AverageTemperatureUncertainty,City,Country,Latitude,Longitude
+def load_data_from_csv(csv_path):
+    try:
+        postgres_connection = get_postgres_connection()
+        cursor = postgres_connection.cursor()
+
+        with open(csv_path, newline='') as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                convert_empty_to_null(row)
+                insert_into_land_temperature(cursor, row, reader.line_num)
+                postgres_connection.commit()
+
+        cursor.close()
+        postgres_connection.close()
+        print('Finished loading data from csv')
+
+    except Exception as error:
+        print('Error while loading data from csv')
+        print(error)
+
+
+def etl(csv_path):
+    create_land_temperatures_db()
+    load_data_from_csv(csv_path)
+
+
+# this script expects an argument containing the path to the csv file
+if __name__ == '__main__':
+    try:
+        etl(sys.argv[1])
+    except IndexError as _:
+        print("this script expects one argument containing the path to GlobalLandTemperaturesByCity csv file")
+
+
