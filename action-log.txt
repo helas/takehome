@@ -59,7 +59,9 @@
 
 11- reorganized the docker-compose and Dockerfile files
     ? As I separated the docker-compose of the client container, I had to create an external network
-    - generated scripts to make it easier to deploy the containers and execute the tasks
+    - generated sh scripts to make it easier to deploy the containers and execute the tasks
+
+12- documentation of classes
 
 
 

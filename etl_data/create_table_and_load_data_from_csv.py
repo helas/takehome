@@ -4,6 +4,7 @@ import sys
 import csv
 
 
+# Returns a connection to the database.
 def get_postgres_connection():
     try:
         return pg.connect(
@@ -17,6 +18,7 @@ def get_postgres_connection():
         print(error)
 
 
+# Creates the table land_temperatures. Return True if success and False otherwise.
 def create_land_temperatures_db():
     try:
         postgres_connection = get_postgres_connection()
@@ -47,7 +49,7 @@ def create_land_temperatures_db():
         return False
 
 
-# replace empty values by nulls
+# replace eventual empty values from a csv row by nulls. Modifies the argument.
 def convert_empty_to_null(csv_row_dict):
     for k, v in csv_row_dict.items():
         if v == '':

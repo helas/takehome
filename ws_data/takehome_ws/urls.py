@@ -23,8 +23,8 @@ urlpatterns = [
     path('', include('land_temperatures.urls')),
 
     path('openapi/', get_schema_view(
-        title="School Service",
-        description="API for developers who would love to use our service in a School project"
+        title="Takehome API",
+        description=""
     ), name='openapi-schema'),
     path('docs/', TemplateView.as_view(
         template_name='documentation.html',
