@@ -59,8 +59,6 @@ class TakeHomeApiClient:
         if response.status_code == 200:
             print(f'Successfully updated the record. The new avg_temp is {data["avg_temp"]}')
         else:
-            print(params)
-            print(data)
             print(f'There was an issue: {response.status_code}')
 
     def run_exercises(self):
