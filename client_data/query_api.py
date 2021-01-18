@@ -54,12 +54,14 @@ class TakeHomeApiClient:
         params = {'city_name': wrong_record['city_name'], 'date': wrong_record['date']}
         data = {'avg_temp': wrong_record['avg_temp'] - 2.5}
 
-        response = requests.put('http://web-service:8000/land_temperature/', params=params, data=data)
+        response = requests.put(f'http://web-service:8000/land_temperature/{params["city_name"]}/{params["date"]}',
+                                data=data)
         if response.status_code == 200:
             print(f'Successfully updated the record. The new avg_temp is {data["avg_temp"]}')
         else:
+            print(params)
+            print(data)
             print(f'There was an issue: {response.status_code}')
-
 
     def run_exercises(self):
         max_avg_record = self.highest_average_temperature_since_2000()

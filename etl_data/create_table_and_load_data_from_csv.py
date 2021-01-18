@@ -57,7 +57,7 @@ def convert_empty_to_null(csv_row_dict):
 
 
 # inserts data from a DictReader populated with data from GlobalLandTemperaturesByCity.csv
-# into land_temperature table.
+# into land_temperature table in batches of size len(values).
 # parameters are a cursor for accessing the database, the DictReader row
 def insert_many_rows_into_land_temperature(db_connection_cursor, values):
     try:

@@ -4,5 +4,11 @@
 export CSV_FILE_NAME=$1
 export PATH_TO_CSV_FOLDER=$2
 
-docker network create external-network
-docker-compose up --build
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied. arg1: csv_file_name, arg2: csv_file_path"
+  else
+    docker network create external-network
+    docker-compose up --build
+fi
+

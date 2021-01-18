@@ -101,20 +101,8 @@ class LandTemperatureList(APIView):
 
         return None
 
+
 class LandTemperatureDetail(APIView):
-
-    def __get_right_serializer_for_land_temperature_detail(self, request, land_temperature_record):
-        avg_temp = request.data.get('avg_temp', None)
-        temp_uncertainty = request.data.get('temp_uncertainty', None)
-
-        if avg_temp is None and temp_uncertainty is None:
-            return None
-        elif avg_temp is not None and temp_uncertainty is None:
-            return LandTemperatureUpdateAvgTemperature(land_temperature_record, data=request.data)
-        elif avg_temp is None and temp_uncertainty is not None:
-            return LandTemperatureUpdateTemperatureUncertainty(land_temperature_record, data=request.data)
-
-        return LandTemperatureUpdateAverageUncertainty(land_temperature_record, data=request.data)
 
     def put(self, request, city_name, date):
         """
@@ -145,3 +133,16 @@ class LandTemperatureDetail(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def __get_right_serializer_for_land_temperature_detail(self, request, land_temperature_record):
+        avg_temp = request.data.get('avg_temp', None)
+        temp_uncertainty = request.data.get('temp_uncertainty', None)
+
+        if avg_temp is None and temp_uncertainty is None:
+            return None
+        elif avg_temp is not None and temp_uncertainty is None:
+            return LandTemperatureUpdateAvgTemperature(land_temperature_record, data=request.data)
+        elif avg_temp is None and temp_uncertainty is not None:
+            return LandTemperatureUpdateTemperatureUncertainty(land_temperature_record, data=request.data)
+
+        return LandTemperatureUpdateAverageUncertainty(land_temperature_record, data=request.data)
