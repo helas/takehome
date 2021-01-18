@@ -14,6 +14,16 @@ services:
       timeout: 5s
       retries: 5
 
+  loader:
+    build: ./etl_data
+    depends_on:
+      database:
+        condition: service_healthy
+    command: bash -c "python /etl_data/create_table_and_load_data_from_csv.py /etl_data/csv_folder/${CSV_FILE_NAME}"
+    volumes:
+      - ./etl_data:/etl_data
+      - ${PATH_TO_CSV_FOLDER}:/etl_data/csv_folder
+
   web-service:
     depends_on:
       database:
@@ -27,3 +37,28 @@ services:
       - "8000:8000"
     volumes:
       - ./ws_data:/ws_data
+
+networks:
+    default:
+      external:
+        name: external-network
+#networks:
+#    external:
+#      name: external-network
+#  loader:
+#    image: python:3.9.1
+#    depends_on:
+#      database:
+#        condition: service_healthy
+#    command: bash -c "python /etl_data/create_table_and_load_data_from_csv.py /etl_data/csv_folder/${CSV_FILE_NAME}"
+#    volumes:
+#      - ./etl_data:/etl_data
+#      - ${PATH_TO_CSV_FOLDER}:/etl_data/csv_folder
+#
+#  client:
+#    image: python:3.9.1
+#    command: bash -c "pip install requests ; python /client_data/query_api.py"
+#    depends_on:
+#      - loader
+#    volumes:
+#      - ./client_data:/client_data

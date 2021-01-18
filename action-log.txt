@@ -52,6 +52,14 @@
     - generate tests
     - update views and urls
 
+9- generated simple api doc using swaggerui
+    ? it is a lot less automatic that I was expecting
+
+10- implemented straightforward client to answer takehome exercises using the api
+
+11- reorganized the docker-compose and Dockerfile files
+    ? As I separated the docker-compose of the client container, I had to create an external network
+    - generated scripts to make it easier to deploy the containers and execute the tasks
 
 
 

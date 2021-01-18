@@ -25,7 +25,7 @@ SECRET_KEY = '0)8tc38kq_jbr5m6c3amu+&ru$mls^wht!8i^bgbx%k)2=9g#k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['web-service', 'localhost']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_swagger'
 ]
 
 REST_FRAMEWORK = {
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'takehome_ws.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
